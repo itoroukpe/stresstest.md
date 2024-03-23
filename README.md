@@ -51,6 +51,82 @@ To use this script to test horizontal autoscaling in AWS:
 
 This approach allows you to validate the effectiveness of horizontal autoscaling in AWS under different levels of load and ensure that your application can dynamically adjust its capacity to handle fluctuations in demand.
 
+### Below is a simple Bash script that you can use to induce CPU load on a Linux system. This script repeatedly runs a calculation-intensive task in the background, consuming CPU resources and generating load. You can run this script on an EC2 instance in AWS to simulate workload and test vertical autoscaling.
+
+```bash
+#!/bin/bash
+
+# Function to generate CPU load
+generate_load() {
+    while true; do
+        # Perform a calculation-intensive task
+        echo "Generating CPU load..."
+        echo "scale=10000; 4*a(1)" | bc -l >/dev/null
+
+        # Sleep for a short duration to control the rate of load generation
+        sleep 1
+    done
+}
+
+# Check if stress test is already running
+if pgrep -f "generate_load" > /dev/null; then
+    echo "Stress test is already running."
+    exit 1
+fi
+
+# Start generating CPU load in the background
+generate_load &
+```
+
+Save the above script to a file (e.g., `cpu_stress_test.sh`) on your Linux system. Then, make the script executable by running:
+
+```bash
+chmod +x cpu_stress_test.sh
+```
+
+To run the stress test, execute the script:
+
+```bash
+./cpu_stress_test.sh
+```
+
+This script will continuously generate CPU load by performing a calculation-intensive task in a loop. You can adjust the intensity of the load by modifying the calculation or sleep duration in the `generate_load()` function. By monitoring system metrics (such as CPU utilization) and observing the behavior of your EC2 instance, you can evaluate the effectiveness of vertical autoscaling in AWS.
+
+### To perform a stress test on a Linux server and induce load to test vertical autoscaling in AWS, you can use tools like `stress-ng` or `sysbench` to simulate CPU, memory, or I/O stress. Here's an example of a simple bash script using `stress-ng` to induce CPU load:
+
+**stress_test.sh:**
+```bash
+#!/bin/bash
+
+# Install stress-ng if not already installed
+sudo apt-get update
+sudo apt-get install -y stress-ng
+
+# Induce CPU load
+stress-ng --cpu 4 --timeout 300s --metrics-brief
+```
+
+This script installs `stress-ng` if it's not already installed, then runs stress-ng to stress the CPU for 300 seconds (5 minutes) using 4 CPU cores. You can customize the parameters based on your specific testing requirements.
+
+To monitor the servers and observe autoscaling in action, you can use AWS CloudWatch metrics and alarms. Here's how you can set it up:
+
+1. **CloudWatch Monitoring:**
+   - Enable detailed monitoring for your EC2 instances to collect metrics at a higher resolution (1-minute intervals).
+   - Navigate to the EC2 dashboard in the AWS Management Console.
+   - Select the instance(s) you want to monitor, click on "Actions," and choose "Monitor and troubleshoot."
+
+2. **CloudWatch Alarms:**
+   - Set up CloudWatch alarms to trigger autoscaling actions based on predefined thresholds. For example, you can create alarms based on CPU utilization exceeding a certain percentage for a sustained period.
+   - Go to the CloudWatch dashboard and navigate to "Alarms" in the left sidebar.
+   - Click on "Create alarm" and select the appropriate metric (e.g., CPUUtilization).
+   - Define the threshold, duration, and actions to take (e.g., scale up or down) when the alarm is triggered.
+
+3. **Autoscaling Configuration:**
+   - Configure autoscaling policies to scale your EC2 instances vertically based on CloudWatch alarms.
+   - Navigate to the Autoscaling dashboard in the AWS Management Console.
+   - Create or update autoscaling groups and specify scaling policies based on CPU utilization metrics.
+
+By running the stress test script on your Linux servers and monitoring CPU utilization metrics in CloudWatch, you can observe the autoscaling process in action. As CPU load increases, CloudWatch alarms will be triggered based on predefined thresholds, prompting autoscaling actions to scale up the instances vertically to handle the increased load. Similarly, as CPU load decreases, autoscaling policies can scale down the instances to optimize resource utilization and cost efficiency.
 
 ### To induce load on a Linux server, you can use stress-ng, a tool specifically designed for stress testing and benchmarking systems. Below is an example of a basic stress test script using stress-ng:
 
