@@ -1,4 +1,4 @@
-To conduct a stress test on a Linux-based system to induce load and test horizontal autoscaling in AWS, you can use a tool called `stress`. `stress` is a simple command-line utility that imposes load on a system by stressing CPU, memory, I/O, or other resources. Here's a basic script using `stress` to induce load on a Linux system:
+### To conduct a stress test on a Linux-based system to induce load and test horizontal autoscaling in AWS, you can use a tool called `stress`. `stress` is a simple command-line utility that imposes load on a system by stressing CPU, memory, I/O, or other resources. Here's a basic script using `stress` to induce load on a Linux system:
 
 ```bash
 #!/bin/bash
@@ -52,7 +52,7 @@ To use this script to test horizontal autoscaling in AWS:
 This approach allows you to validate the effectiveness of horizontal autoscaling in AWS under different levels of load and ensure that your application can dynamically adjust its capacity to handle fluctuations in demand.
 
 
-## To induce load on a Linux server, you can use stress-ng, a tool specifically designed for stress testing and benchmarking systems. Below is an example of a basic stress test script using stress-ng:
+### To induce load on a Linux server, you can use stress-ng, a tool specifically designed for stress testing and benchmarking systems. Below is an example of a basic stress test script using stress-ng:
 
 ```bash
 #!/bin/bash
